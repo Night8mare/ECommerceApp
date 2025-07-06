@@ -1,2 +1,0 @@
-DELETE FROM Product;
-DBCC CHECKIDENT ('Product', RESEED, 0);
