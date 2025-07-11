@@ -20,7 +20,7 @@ public class ItemController : Controller
         if (CartId.HasValue)
         {
             var CartExist = await _context.Carts.FindAsync(CartId);
-            
+
             if (CartExist == null)
             {
                 return BadRequest("Cart not found");
@@ -44,7 +44,7 @@ public class ItemController : Controller
 
             var totalPrice = ItemList.Sum(c => c.TotalItemPrice);
 
-            return Ok(new { ItemItems = ItemList, TotalPrice = totalPrice });            
+            return Ok(new { ItemItems = ItemList, TotalPrice = totalPrice });
         }
         return NotFound("Please provide cart ID");
     }
@@ -65,7 +65,7 @@ public class ItemController : Controller
             return NotFound("You need to provide the quantity for the item choosen");
         }
 
-        var CartExist = await  _context.Carts.FindAsync(CartId);
+        var CartExist = await _context.Carts.FindAsync(CartId);
         var ProductExist = await _context.Products.FindAsync(productId);
 
         if (CartExist == null)
@@ -92,15 +92,15 @@ public class ItemController : Controller
         {
             return BadRequest($"The avaliable Stock {ProductExist.StockQuantity}\nPlease edit your desired quantity");
         }
-        
-        var AddToItem = new Item { CartId = CartExist.Id, ProductId = ProductExist.Id, Quantity = quantity.Value, TotalAmount = quantity.Value * ProductExist.PurchasePrice, ItemStatus = "Pending"};
+
+        var AddToItem = new Item { CartId = CartExist.Id, ProductId = ProductExist.Id, Quantity = quantity.Value, TotalAmount = quantity.Value * ProductExist.PurchasePrice, ItemStatus = "Pending" };
         var Item = await _context.Items.AddAsync(AddToItem);
         await _context.SaveChangesAsync();
         return Ok("Added successfully");
     }
 
-    [HttpPost("api/UpdateQuantity")]
-    public async Task<IActionResult> UpdateQuantity(int? cartId, int? productId , int? quantity)
+    [HttpPut("api/UpdateQuantity")]
+    public async Task<IActionResult> UpdateQuantity(int? cartId, int? productId, int? quantity)
     {
         if (!cartId.HasValue)
         {
@@ -114,7 +114,7 @@ public class ItemController : Controller
         {
             return NotFound("You need to provide the quantity for the item choosen");
         }
-        
+
         var ItemExcist = await _context.Items.Include(i => i.Product).FirstOrDefaultAsync(i => i.CartId == cartId && i.Product.Id == productId && i.ItemStatus == "Pending");
 
         if (ItemExcist == null)
@@ -140,10 +140,10 @@ public class ItemController : Controller
         ItemExcist.Quantity = quantity.Value;
         ItemExcist.TotalAmount = quantity.Value * ItemExcist.Product.PurchasePrice;
         await _context.SaveChangesAsync();
-        return Ok("Updated Quantity");        
+        return Ok("Updated Quantity");
     }
 
-    [HttpPost("api/RemoveItem")]
+    [HttpDelete("api/RemoveItem")]
     public async Task<IActionResult> RemoveItem(int? CartId, int? productId)
     {
         if (!CartId.HasValue)

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ECommerceApp.Models;
+using ECommerceApp.DTO;
 using ECommerceApp.Services;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
@@ -26,10 +27,15 @@ public class AccountServiceController : Controller
     }
 
     [HttpPost("api/register")]
-    public async Task<IActionResult> Register([FromBody] Customer user)
+    public async Task<IActionResult> Register([FromBody] RegisterDTO user)
     {
         try
         {
+            if (user == null)
+            {
+                return BadRequest("Invalid request body. Expected JSON object.");
+            }
+            
             Validator.ValidateRegistry(user, ModelState, _context);
 
             if (ModelState.IsValid)
@@ -70,7 +76,7 @@ public class AccountServiceController : Controller
     }
 
     [HttpPost("api/Login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest login)
+    public async Task<IActionResult> Login([FromBody] LoginDTO login)
     {
         try
         {

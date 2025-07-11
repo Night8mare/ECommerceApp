@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using ECommerceApp.DTO;
 
 namespace ECommerceApp.Services
 {
     public static class Validator
     {
-        public static void ValidateRegistry([FromBody]Customer user, ModelStateDictionary ModelState, ApplicationDbContext _context)
+        public static void ValidateRegistry([FromBody]RegisterDTO user, ModelStateDictionary ModelState, ApplicationDbContext _context)
         {
             if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrWhiteSpace(user.FirstName))
             {

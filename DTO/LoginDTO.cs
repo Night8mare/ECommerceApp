@@ -1,8 +1,8 @@
 using System;
 
-namespace ECommerceApp.Services
+namespace ECommerceApp.DTO
 {
-    public class LoginRequest
+    public class LoginDTO
     {
         
         public required string Email { get; set; }
