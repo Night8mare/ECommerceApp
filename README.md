@@ -55,8 +55,10 @@ dotnet ef dbcontext scaffold "Server=YOUR_SERVER_NAME;Database=ECommerce;Trusted
 dotnet run
 
 The API will be available at:
-https://localhost:PORT/api/
+http://localhost:PORT/api/
+http://localhost:PORT/swagger
 
+Or you can use 
 API Endpoints
 
 *POST api/register
@@ -89,10 +91,10 @@ Query Parameters:
 *GET api/ItemView
 Query Parameters:
 ?CartId=6
-*POST api/UpdateQuantity
+*PUT api/UpdateQuantity
 Query Parameters:
 ?cartId=6&productId=1&quantity=7
-*POST api/RemoveItem
+*DELETE api/RemoveItem
 Query Parameters:
 ?CartId=6&productId=1
 *POST api/AddOrder
@@ -101,3 +103,5 @@ Query Parameters:
 *POST api/ItemHistory
 Query Parameters:
 ?OrderId=9
+
+
