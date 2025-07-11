@@ -47,7 +47,10 @@ In appsettings.json, configure the connection:
 
 Replace YOUR_SERVER_NAME with your local SQL Server instance name.
 
-4. Run the project
+4. Scaffold the database
+dotnet ef dbcontext scaffold "Server=YOUR_SERVER_NAME;Database=ECommerce;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -o Models --context ApplicationDbContext --use-database-names
+
+5. Run the project
 
 dotnet run
 
