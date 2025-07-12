@@ -33,7 +33,7 @@ namespace ECommerceApp.Services
             {
                 ModelState.AddModelError("Email", "Your email is too short!");
             }
-            else if (_context.Customers.Any(c => c.Email == user.Email))
+            else if (_context.Users.Any(c => c.Email == user.Email))
             {
                 ModelState.AddModelError("Email", "This email is already registered");
             }
