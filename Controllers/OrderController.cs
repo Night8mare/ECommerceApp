@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ECommerceApp.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ECommerceApp.Controllers;
 
@@ -14,6 +15,7 @@ public class OrderController : Controller
         _context = context;
     }
 
+    [Authorize(Roles = "User")]
     [HttpGet("api/ViewOrder")]
     public async Task<IActionResult> ViewOrder(int CartNo)
     {
@@ -29,6 +31,7 @@ public class OrderController : Controller
         return Ok(orderHistoryList);
     }
 
+    [Authorize(Roles = "User")]
     [HttpGet("api/ItemHistory")]
     public async Task<IActionResult> ItemHistory(int? OrderId)
     {
@@ -50,6 +53,7 @@ public class OrderController : Controller
         return Ok(ItemList);
     }
 
+    [Authorize(Roles = "User")]
     [HttpPost("api/AddOrder")]
     public async Task<IActionResult> AddOrder(int? CartId)
     {

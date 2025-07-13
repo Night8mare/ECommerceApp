@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ECommerceApp.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ECommerceApp.Controllers;
 
@@ -14,6 +15,7 @@ public class ItemController : Controller
         _context = context;
     }
 
+    [Authorize(Roles = "User")]
     [HttpGet("api/ItemView")]
     public async Task<IActionResult> ItemView(int? CartId)
     {
@@ -49,6 +51,7 @@ public class ItemController : Controller
         return NotFound("Please provide cart ID");
     }
 
+    [Authorize(Roles = "User")]
     [HttpPost("api/AddItem")]
     public async Task<IActionResult> AddItem(int? CartId, int? productId, int? quantity)
     {
@@ -99,6 +102,7 @@ public class ItemController : Controller
         return Ok("Added successfully");
     }
 
+    [Authorize(Roles = "User")]
     [HttpPut("api/UpdateQuantity")]
     public async Task<IActionResult> UpdateQuantity(int? cartId, int? productId, int? quantity)
     {
@@ -143,6 +147,7 @@ public class ItemController : Controller
         return Ok("Updated Quantity");
     }
 
+    [Authorize(Roles = "User")]
     [HttpDelete("api/RemoveItem")]
     public async Task<IActionResult> RemoveItem(int? CartId, int? productId)
     {

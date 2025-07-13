@@ -29,21 +29,8 @@ public class ProductController : Controller
                                 Available = p.IsAvailable}).ToListAsync();
         return Ok(list);
     }
-
-    [Authorize(Roles = "Admin")]
-    [HttpGet("api/Product/Admin")]
-    public async Task<IActionResult> ProductAdmin()
-    {
-        var list = await _context.Products.Where(p => p.IsAvailable == "InStock" && p.StockQuantity != 0)
-                            .Select(p => new {
-                                ProductName = p.Name,
-                                ProductDiscreption = p.Description,
-                                ProductPrice = p.PurchasePrice,
-                                Stock = p.StockQuantity,
-                                Available = p.IsAvailable}).ToListAsync();
-        return Ok(list);
-    }
-
+    
+    [Authorize(Roles = "User")]
     [HttpGet("api/Product/Filter")]
     public async Task<IActionResult> ProductFilter(decimal? minPrice, decimal? maxPrice, string? AscOrder, string? search)
     {
