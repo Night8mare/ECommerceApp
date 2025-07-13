@@ -1,0 +1,33 @@
+# Ignore build outputs
+bin/
+obj/
+Models/
+Views/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore Visual Studio temp folder
+.vs/
+
+# Ignore LocalDB physical files (ONLY if not sharing .mdf/.ldf)
+*.mdf
+*.ldf
+
+# Or if using a .bak file
+!DatabaseBackups/EFCore.bak
+
+# Ignore EF Migrations snapshots (optional)
+Migrations/*Snapshot.cs
+
+# Ignore log files and OS clutter
+*.log
+*.DS_Store
+Thumbs.db
+
+# Ignore secrets
+appsettings.Development.json
+appsettings.json
