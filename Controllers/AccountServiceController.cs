@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace ECommerceApp.Controllers
@@ -74,6 +75,57 @@ namespace ECommerceApp.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost("api/register/Admin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] AdminDTO user)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return BadRequest("Invalid request body. Expected JSON object.");
+                }
+
+                Validator.ValidateAdminRegistry(user, ModelState, _context);
+
+                if (ModelState.IsValid)
+                {
+                    var NewUser = new User
+                    {
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        PhoneNo = user.PhoneNo,
+                        Country = user.Country,
+                        State = user.State,
+                        City = user.City,
+                        Address = user.Address,
+                        PostalCard = user.PostalCard,
+                        Role = user.Role
+                    };
+                    var passwordHasher = new PasswordHasher<User>().HashPassword(NewUser, user.PasswordHash);
+                    NewUser.PasswordHash = passwordHasher;
+                    await _context.Users.AddAsync(NewUser);
+                    await _context.SaveChangesAsync();
+
+                    var Cart = await _context.Carts.AnyAsync(c => c.UserId == NewUser.Id);
+                    if (!Cart)
+                    {
+                        var NewCart = new Cart { UserId = NewUser.Id };
+                        await _context.Carts.AddAsync(NewCart);
+                        await _context.SaveChangesAsync();
+                        return Ok("User Registered Successfully");
+                    }
+                    return Ok("User registered successfully");
+                }
+                return BadRequest(ModelState);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Internal Server Error: {e.Message}");
+            }
+        }
+
         [HttpPost("api/Login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO login)
         {
@@ -104,7 +156,7 @@ namespace ECommerceApp.Controllers
 
                 var passwordVerificationResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, login.PasswordHash);
 
-                if (passwordVerificationResult != PasswordVerificationResult.Success)
+                if (passwordVerificationResult == PasswordVerificationResult.Failed)
                 {
                     return BadRequest("Invalid username or password!");
                 }
@@ -118,13 +170,13 @@ namespace ECommerceApp.Controllers
                     user.Token = accessToken;
                     _context.Update(user);
                     await _context.SaveChangesAsync();
-                    return Ok(accessToken);
+                    return Ok("accessToken");
                 }
                 var token = CreateToken(user);
                 user.Token = token;
                 _context.Update(user);
                 await _context.SaveChangesAsync();
-                return Ok(token);
+                return Ok("token");
             }
             catch (Exception e)
             {
